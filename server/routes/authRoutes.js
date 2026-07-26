@@ -1,6 +1,6 @@
 import express from "express";
 
-import { signupUser, loginUser, logoutUser, deleteAccount } from "../controllers/authController.js";
+import { signupUser, loginUser, logoutUser, refreshAccessToken} from "../controllers/authController.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -8,6 +8,7 @@ const router = express.Router();
 router.post("/signup", signupUser);
 router.post("/login", loginUser);
 router.post("/logout",authMiddleware, logoutUser);
-router.delete("/delete",authMiddleware, deleteAccount);
+router.post("/refresh", refreshAccessToken);
+
 
 export default router;

@@ -1,1 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
+
+body{
+    font-family: "Inter",sans-serif;
+}
+
+.font-heading{
+    font-family: "Fraunces",serif;
+}
+
+.font-body{
+    font-family: "Inter",sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}

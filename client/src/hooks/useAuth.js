@@ -27,7 +27,7 @@ export const useLogin = () => {
         onSuccess: (data) => {
             localStorage.setItem("accessToken", data.accessToken);
             toast.success("Login successful.");
-            navigate("/");
+            navigate("/hospitals");
         },
         onError: (error) => {
             toast.error(error.response?.data?.message ||

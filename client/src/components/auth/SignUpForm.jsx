@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
+import { useSignup } from "../../hooks/useAuth";
 
 export const SignUpForm = () => {
 
@@ -7,7 +9,10 @@ export const SignUpForm = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] =
+    useState(false);
+    const { mutate, isPending } = useSignup();
     
     const handleNameChange = (e) => setName(e.target.value);
     const handleEmailChange = (e) => setEmail(e.target.value);
@@ -45,7 +50,7 @@ export const SignUpForm = () => {
             return;
         }
 
-        console.log({ name, email, password, confirmPassword });
+        mutate({ name, email, password });
 
     };
 
@@ -96,44 +101,80 @@ export const SignUpForm = () => {
 
                     <div className="mt-5">
                         <label className="font-medium text-[#11131A]">
-                            Password
+                          Password
                         </label>
 
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            placeholder="••••••••"
-                            className="mt-2 w-full rounded-lg border border-[#E2E4EC] px-4 py-3 outline-none focus:border-[#1D4ED8]"
-                        />
-                    </div>
+                     <div className="relative mt-2">
+
+        <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={handlePasswordChange}
+            placeholder="••••••••"
+            className="w-full rounded-lg border border-[#E2E4EC] px-4 py-3 pr-12 outline-none focus:border-[#1D4ED8]"
+        />
+
+        <button
+            type="button"
+            onClick={() =>
+                setShowPassword(!showPassword)
+            }
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280]"
+        >
+            {showPassword ? <FiEyeOff /> : <FiEye />}
+        </button>
+
+    </div>
+</div>
 
 
                     <div className="mt-5">
-                        <label className="font-medium text-[#11131A]">
-                            Confirm Password
-                        </label>
+    <label className="font-medium text-[#11131A]">
+        Confirm Password
+    </label>
 
-                        <input
-                            type="password"
-                            value={confirmPassword}
-                            onChange={handleConfirmPasswordChange}
-                            placeholder="••••••••"
-                            className="mt-2 w-full rounded-lg border border-[#E2E4EC] px-4 py-3 outline-none focus:border-[#1D4ED8]"
-                        />
-                    </div>
+    <div className="relative mt-2">
+
+        <input
+            type={
+                showConfirmPassword
+                    ? "text"
+                    : "password"
+            }
+            value={confirmPassword}
+            onChange={handleConfirmPasswordChange}
+            placeholder="••••••••"
+            className="w-full rounded-lg border border-[#E2E4EC] px-4 py-3 pr-12 outline-none focus:border-[#1D4ED8]"
+        />
+
+        <button
+            type="button"
+            onClick={() =>
+                setShowConfirmPassword(
+                    !showConfirmPassword
+                )
+            }
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280]"
+        >
+            {showConfirmPassword
+                ? <FiEyeOff />
+                : <FiEye />}
+        </button>
+
+    </div>
+</div>
 
 
                     <button
                       type="submit"
-                       disabled={loading}
+                       disabled={isPending}
                        className={`mt-7 w-full rounded-lg py-3.5 font-semibold text-white transition ${
-                       loading
+                       isPending
                         ? "cursor-not-allowed bg-[#8CAEF3]"
                         : "bg-[#1D4ED8] hover:bg-[#15359E]"
                         }`}
                     >
-                       {loading ? "Creating Account..." : "Sign Up"}
+                       {isPending ? "Creating Account..." : "Sign Up"}
                     </button>
                 </form>
 

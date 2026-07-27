@@ -1,6 +1,6 @@
 import { FiSearch } from "react-icons/fi";
 
-export const SearchBar = () => {
+export const SearchBar = ({ placeholder }) => {
     return (
         <div className="rounded-2xl border border-[#E2E4EC] bg-white p-6 shadow-sm">
 
@@ -14,12 +14,35 @@ export const SearchBar = () => {
 
             <div className="relative mt-5">
 
-                <FiSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-xl text-[#6B7280]" />
+                <FiSearch
+                    className="
+                    absolute
+                    left-5
+                    top-1/2
+                    -translate-y-1/2
+                    text-xl
+                    text-[#6B7280]
+                    "
+                />
 
                 <input
                     type="text"
-                    placeholder="Search hospitals..."
-                    className="w-full rounded-2xl border border-[#E2E4EC] bg-[#F8FAFC] py-4 pl-14 pr-5 text-[#11131A] outline-none transition focus:border-[#1D4ED8] focus:bg-white"
+                    placeholder={placeholder}
+                    className="
+                    w-full
+                    rounded-2xl
+                    border
+                    border-[#E2E4EC]
+                    bg-[#F8FAFC]
+                    py-4
+                    pl-14
+                    pr-5
+                    text-[#11131A]
+                    outline-none
+                    transition
+                    focus:border-[#1D4ED8]
+                    focus:bg-white
+                    "
                 />
 
             </div>
@@ -27,3 +50,5 @@ export const SearchBar = () => {
         </div>
     );
 };
+
+export default SearchBar;

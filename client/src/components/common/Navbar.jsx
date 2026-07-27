@@ -1,4 +1,5 @@
-import { FiPlus } from "react-icons/fi";
+import { NavLink } from "react-router-dom";
+import logo from "../../assets/medilink-icon.png";
 
 export const Navbar = () => {
     return (
@@ -6,9 +7,12 @@ export const Navbar = () => {
 
             <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-5">
 
-                <div className="flex items-center gap-3">
-
-                    <div className="
+                <NavLink
+                    to="/hospitals"
+                    className="flex items-center gap-3"
+                >
+                    <div
+                        className="
                         flex
                         h-12
                         w-12
@@ -18,61 +22,71 @@ export const Navbar = () => {
                         bg-[#1D4ED8]
                         text-white
                         shadow-sm
-                    ">
-                        <FiPlus size={26} strokeWidth={3}/>
+                        "
+                    >
+                        <img src={logo} alt="MediLink Logo" className="h-8 w-8" />
                     </div>
 
-
-                    <h1 className="
+                    <h1
+                        className="
                         text-3xl
                         font-bold
                         tracking-tight
                         text-[#1D4ED8]
-                    ">
+                        "
+                    >
                         MediLink
                     </h1>
-
-                </div>
+                </NavLink>
 
                 <div className="flex items-center gap-3">
 
-                    <button className="
-                        rounded-xl
-                        bg-[#1D4ED8]
-                        px-5
-                        py-2.5
-                        font-medium
-                        text-white
-                    ">
+                    <NavLink
+                        to="/hospitals"
+                        className={({ isActive }) =>
+                            `rounded-xl px-5 py-2.5 font-medium transition ${
+                                isActive
+                                    ? "bg-[#1D4ED8] text-white"
+                                    : "text-[#6B7280] hover:bg-[#E7EDFC] hover:text-[#1D4ED8]"
+                            }`
+                        }
+                    >
                         Hospital
-                    </button>
+                    </NavLink>
 
-                    <button className="
-                        rounded-xl
-                        px-5
-                        py-2.5
-                        font-medium
-                        text-[#6B7280]
-                        hover:bg-[#E7EDFC]
-                        hover:text-[#1D4ED8]
-                    ">
+
+                    <NavLink
+                        to="/pharmacies"
+                        className={({ isActive }) =>
+                            `rounded-xl px-5 py-2.5 font-medium transition ${
+                                isActive
+                                    ? "bg-[#1D4ED8] text-white"
+                                    : "text-[#6B7280] hover:bg-[#E7EDFC] hover:text-[#1D4ED8]"
+                            }`
+                        }
+                    >
                         Pharmacy
-                    </button>
+                    </NavLink>
 
-                    <button className="
-                        rounded-xl
-                        px-5
-                        py-2.5
-                        font-medium
-                        text-[#6B7280]
-                        hover:bg-[#E7EDFC]
-                        hover:text-[#1D4ED8]
-                    ">
+
+                    <NavLink
+                        to="/bloodbanks"
+                        className={({ isActive }) =>
+                            `rounded-xl px-5 py-2.5 font-medium transition ${
+                                isActive
+                                    ? "bg-[#1D4ED8] text-white"
+                                    : "text-[#6B7280] hover:bg-[#E7EDFC] hover:text-[#1D4ED8]"
+                            }`
+                        }
+                    >
                         Blood Bank
-                    </button>
+                    </NavLink>
 
                 </div>
-                <button className="
+
+                <NavLink
+                    to="/profile"
+                    className="
                     flex
                     h-12
                     w-12
@@ -83,13 +97,17 @@ export const Navbar = () => {
                     text-lg
                     font-semibold
                     text-[#1D4ED8]
-                ">
+                    transition
+                    hover:bg-[#D7E3FF]
+                    "
+                >
                     T
-                </button>
-
+                </NavLink>
 
             </div>
 
         </nav>
     );
 };
+
+export default Navbar;

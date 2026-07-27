@@ -10,7 +10,11 @@ export const HospitalsPage = () => {
     return (
         <DashboardLayout>
 
-            <SearchBar />
+            <SearchBar 
+              title="Search Hospitals"
+              description="Find hospitals near your location."
+              placeholder="Search Hospitals..."  
+            />
 
             <div className="mt-5">
                 <DistanceFilter />

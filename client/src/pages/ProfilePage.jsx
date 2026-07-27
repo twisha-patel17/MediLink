@@ -1,6 +1,28 @@
+import DashboardLayout from "../layouts/DashboardLayout";
+
+import { ProfileCard } from "../components/profile/ProfileCard";
+import  { SettingsCard } from "../components/profile/SettingsCard";
+import { SavedPlacesCard } from "../components/profile/SavedPlacesCard";
+import { DeleteAccountCard } from "../components/profile/DeleteAccountCard";
 
 export const ProfilePage = () => {
-  return (
-    <div>ProfilePage</div>
-  )
-}
+    return (
+        <DashboardLayout>
+
+            <div className="grid grid-cols-2 gap-8">
+
+                <ProfileCard />
+
+                <SettingsCard />
+
+                <SavedPlacesCard />
+
+                <DeleteAccountCard />
+
+            </div>
+
+        </DashboardLayout>
+    );
+};
+
+export default ProfilePage;

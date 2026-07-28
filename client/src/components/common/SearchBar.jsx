@@ -1,15 +1,21 @@
 import { FiSearch } from "react-icons/fi";
 
-export const SearchBar = ({ placeholder }) => {
+export const SearchBar = ({
+    title,
+    description,
+    placeholder,
+    searchQuery,
+    setSearchQuery,
+}) => {
     return (
         <div className="rounded-2xl border border-[#E2E4EC] bg-white p-6 shadow-sm">
 
             <h2 className="text-2xl font-semibold text-[#11131A]">
-                Search Healthcare Resources
+                {title}
             </h2>
 
             <p className="mt-2 text-[#6B7280]">
-                Search hospitals, pharmacies and blood banks nearby.
+                {description}
             </p>
 
             <div className="relative mt-5">
@@ -27,6 +33,8 @@ export const SearchBar = ({ placeholder }) => {
 
                 <input
                     type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={placeholder}
                     className="
                     w-full

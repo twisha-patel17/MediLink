@@ -7,7 +7,11 @@ export const login = (data) =>
     api.post("/auth/login", data);
 
 export const logout = () =>
-    api.post("/auth/logout");
+    api.post("/auth/logout", {
+        refreshToken: localStorage.getItem("refreshToken"),
+    });
 
 export const refreshToken = () =>
-    api.post("/auth/refresh");
+    api.post("/auth/refresh", {
+        refreshToken: localStorage.getItem("refreshToken"),
+    });

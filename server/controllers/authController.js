@@ -1,164 +1,174 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { generateAccessToken, generateRefreshToken } from "../utils/generateTokens.js";
+
+import {
+    generateAccessToken,
+    generateRefreshToken,
+} from "../utils/generateTokens.js";
+
 
 export const signupUser = async (req, res) => {
-    const { name, email, password } = req.body;
     try {
+        const { name, email, password } = req.body;
 
-        if(!name?.trim() || !email?.trim() || !password?.trim()) {
-            return res.status(400).json({
-                message: "All fields are required."
-            });
+        if (!name?.trim() || !email?.trim() || !password?.trim()) {
+            return res.status(400).json({ message: "All fields are required." });
         }
 
         const existingUser = await User.findOne({ email });
-        if(existingUser) {
-            return res.status(400).json({
-                message: "User already exists."
-            })
+
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists." });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new User({
+        await User.create({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
         });
 
-        await newUser.save();
-
         return res.status(201).json({
-            message: "User created successfully."
-        })
+            message: "User created successfully.",
+        });
 
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Something went wrong."
-        });
+        return res.status(500).json({ message: "Something went wrong." });
     }
-}
+};
+
 
 export const loginUser = async (req, res) => {
     try {
-        const { email, password, rememberMe } = req.body;
+        console.log(req.body);
+        const { email, password} = req.body;
 
-        if(!email?.trim() || !password?.trim()) {
-            return res.status(400).json({
-                message: "All fields are required."
-            });
+        if (!email?.trim() || !password?.trim()) {
+            return res.status(400).json({ message: "All fields are required." });
         }
 
-        const currentUser = await User.findOne({ email: email.toLowerCase() });
-        
-        if(!currentUser) {
-            return res.status(400).json({
-                message: "Invalid Credentials."
-            });
+        const currentUser = await User.findOne({
+            email: email.toLowerCase(),
+        });
+
+        if (!currentUser) {
+            return res.status(400).json({ message: "Invalid Credentials." });
         }
 
-        const isPasswordCorrect = await bcrypt.compare(password, currentUser.password);
+        const isPasswordCorrect = await bcrypt.compare(
+            password,
+            currentUser.password
+        );
 
-        if(!isPasswordCorrect) {
-            return res.status(400).json({
-                message: "Invalid Credentials."
-            });
+        console.log(isPasswordCorrect);
+
+        if (!isPasswordCorrect) {
+            return res.status(400).json({ message: "Invalid Credentials." });
         }
 
-        const accessToken =  generateAccessToken(currentUser._id);
-
-        const refreshToken = generateRefreshToken(currentUser._id, rememberMe);
+        const accessToken = generateAccessToken(currentUser._id);
+        const refreshToken = generateRefreshToken(
+            currentUser._id,
+        );
 
         currentUser.refreshToken = refreshToken;
         await currentUser.save();
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "Login successful.",
-            refreshToken,
             accessToken,
+            refreshToken,
             user: {
                 id: currentUser._id,
                 name: currentUser.name,
-                email: currentUser.email
-            }
+                email: currentUser.email,
+            },
         });
+
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Something went wrong."
-        });
+        return res.status(500).json({ message: "Something went wrong." });
     }
 };
+
 
 export const refreshAccessToken = async (req, res) => {
     try {
         const { refreshToken } = req.body;
 
-        if(!refreshToken) {
+        if (!refreshToken) {
             return res.status(400).json({
-                message: "Refresh token required."
+                message: "Refresh token required.",
             });
         }
 
-        const decodedUser = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        
+        const decodedUser = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET
+        );
+
         const currentUser = await User.findById(decodedUser.id);
-        if(!currentUser) {
-            return res.status(404).json({
-                message: "User not found."
-            })
+
+        if (!currentUser) {
+            return res.status(404).json({ message: "User not found." });
         }
 
-        if(currentUser.refreshToken !== refreshToken) {
+        if (currentUser.refreshToken !== refreshToken) {
             return res.status(403).json({
-                message: 'Invalid refresh token.'
+                message: "Invalid refresh token.",
             });
         }
 
         const accessToken = generateAccessToken(currentUser._id);
-        return res.status(200).json({
-            accessToken
-        })
+
+        return res.status(200).json({ accessToken });
+
     } catch (error) {
-        if(error.name === "JsonWebTokenError"){
+        if (
+            error.name === "JsonWebTokenError" ||
+            error.name === "TokenExpiredError"
+        ) {
             return res.status(403).json({
-                message: "Invalid refresh token."
+                message: "Invalid or expired refresh token.",
             });
         }
-        if(error.name==="TokenExpiredError") {
-            return res.status(403).json({
-                message: "Refresh token expired."
-            });
-        }
+
         console.log(error);
-        return res.status(500).json({
-            message: "Something went wrong."
-        });
+        return res.status(500).json({ message: "Something went wrong." });
     }
-}
+};
+
 
 export const logoutUser = async (req, res) => {
     try {
-        const currentUser = await User.findByIdAndUpdate(req.user.id,
-            { refreshToken: null },
-        );
+        const { refreshToken } = req.body;
 
-        if(!currentUser) {
-            return res.status(404).json({
-                message: "User not found."
-            })
+        if (!refreshToken) {
+            return res.status(400).json({
+                message: "Refresh token required.",
+            });
         }
 
+        const decodedUser = jwt.verify(
+            refreshToken,
+            process.env.JWT_REFRESH_SECRET
+        );
+
+        await User.findByIdAndUpdate(decodedUser.id, {
+            refreshToken: null,
+        });
+
         return res.status(200).json({
-            message: "Logout successful."
-        })
+            message: "Logout successful.",
+        });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
-            message: "Something went wrong."
+            message: "Something went wrong.",
         });
     }
-}
+};

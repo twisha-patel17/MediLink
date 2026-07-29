@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom"
 
-export const HospitalCard = () => {
+export const HospitalCard = ({id}) => {
+
+    const navigate = useNavigate();
   return (
     <div className="rounded-2xl border border-[#E2E4EC] bg-white p-6 shadow-sm">
 
@@ -23,7 +26,8 @@ export const HospitalCard = () => {
         Ahmedabad, Gujarat
     </p>
 
-    <button className="mt-6 w-full rounded-xl bg-[#1D4ED8] py-3 font-medium text-white transition hover:bg-[#15359E]">
+    <button onClick={() => navigate(`/resource/${id}`)}
+     className="mt-6 w-full rounded-xl bg-[#1D4ED8] py-3 font-medium text-white transition hover:bg-[#15359E]">
         View Details
     </button>
 

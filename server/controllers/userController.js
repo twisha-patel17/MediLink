@@ -18,9 +18,10 @@ export const getCurrentUser = async (req, res) => {
                 email: currentUser.email,
                 profilePicture: currentUser.profilePicture,
                 savedPlaces: currentUser.savedPlaces,
-                recentSearches: currentUser.recentSearches
-            }
-        })
+                recentSearches: currentUser.recentSearches,
+                createdAt: currentUser.createdAt,
+            },
+        });
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -92,9 +93,9 @@ export const updateProfile = async (req, res) => {
 
 export const changePassword = async (req, res) => {
     try {
-        const { oldPassword, newPassword } = req.body;
+        const { currentPassword, newPassword } = req.body;
 
-        if(!oldPassword?.trim() || !newPassword?.trim()) {
+        if(!currentPassword?.trim() || !newPassword?.trim()) {
             return res.status(400).json({
                 message: "Old password and new password are required."
             })
@@ -108,14 +109,14 @@ export const changePassword = async (req, res) => {
             })
         }
 
-        if (oldPassword === newPassword) {
+        if (currentPassword === newPassword) {
           return res.status(400).json({
           message:
           "New password must be different from the old password."
          });
         }
 
-        const isPasswordValid = await bcrypt.compare(oldPassword, currentUser.password);
+        const isPasswordValid = await bcrypt.compare(currentPassword, currentUser.password);
 
         if(!isPasswordValid) {
             return res.status(400).json({

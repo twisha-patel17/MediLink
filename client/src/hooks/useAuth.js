@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import { signup, login, logout } from "../api/authService";
+import { signup, login, logout, googleLogin } from "../api/authService";
 
 
 export const useSignup = () => {
@@ -43,6 +43,11 @@ export const useLogin = () => {
                 data.data.refreshToken
             );
 
+            localStorage.setItem(
+                "user",
+                JSON.stringify(data.data.user)
+            );
+
             toast.success("Login successful.");
             navigate("/hospitals");
         },
@@ -66,6 +71,7 @@ export const useLogout = () => {
         onSuccess: () => {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
 
             toast.success("Logout successful.");
             navigate("/login");
@@ -76,3 +82,39 @@ export const useLogout = () => {
         },
     });
 };
+
+export const useGoogleLogin = () => {
+    const navigate = useNavigate();
+
+    return useMutation({
+        mutationFn: googleLogin,
+
+        onSuccess: (data) => {
+            console.log(data.data.user);
+            localStorage.setItem(
+                "accessToken",
+                data.data.accessToken
+            );
+
+            localStorage.setItem(
+                "refreshToken",
+                data.data.refreshToken
+            );
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(data.data.user)
+            );
+
+            toast.success("Login successful.");
+            navigate("/hospitals");
+        },
+
+        onError: (error) => {
+            toast.error(
+                error.response?.data?.message ||
+                "Something went wrong."
+            );
+        },
+    });
+}

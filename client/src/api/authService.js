@@ -15,3 +15,6 @@ export const refreshToken = () =>
     api.post("/auth/refresh", {
         refreshToken: localStorage.getItem("refreshToken"),
     });
+
+export const googleLogin = (credential) => 
+    api.post("/auth/google-login", {credential});    

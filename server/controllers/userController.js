@@ -20,6 +20,7 @@ export const getCurrentUser = async (req, res) => {
                 savedPlaces: currentUser.savedPlaces,
                 recentSearches: currentUser.recentSearches,
                 createdAt: currentUser.createdAt,
+                isGoogleUser: !!currentUser.googleId,
             },
         });
     } catch (error) {
@@ -93,78 +94,150 @@ export const updateProfile = async (req, res) => {
 
 export const changePassword = async (req, res) => {
     try {
-        const { currentPassword, newPassword } = req.body;
 
-        if(!currentPassword?.trim() || !newPassword?.trim()) {
-            return res.status(400).json({
-                message: "Old password and new password are required."
-            })
-        }
+        const { currentPassword, newPassword } = req.body;
 
         const currentUser = await User.findById(req.user.id);
 
-        if(!currentUser) {
+        if (!currentUser) {
             return res.status(404).json({
-                message: "User not found."
-            })
+                message: "User not found.",
+            });
+        }
+
+        // Google Login Users
+        if (!currentUser.password) {
+            return res.status(400).json({
+                message:
+                    "Password cannot be changed for Google accounts.",
+            });
+        }
+
+        if (
+            !currentPassword?.trim() ||
+            !newPassword?.trim()
+        ) {
+            return res.status(400).json({
+                message:
+                    "Current password and new password are required.",
+            });
         }
 
         if (currentPassword === newPassword) {
-          return res.status(400).json({
-          message:
-          "New password must be different from the old password."
-         });
-        }
-
-        const isPasswordValid = await bcrypt.compare(currentPassword, currentUser.password);
-
-        if(!isPasswordValid) {
             return res.status(400).json({
-                message: "Old password is incorrect."
-            })
+                message:
+                    "New password must be different from the old password.",
+            });
         }
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const isPasswordValid =
+            await bcrypt.compare(
+                currentPassword,
+                currentUser.password
+            );
+
+        if (!isPasswordValid) {
+            return res.status(400).json({
+                message:
+                    "Current password is incorrect.",
+            });
+        }
+
+        const hashedPassword =
+            await bcrypt.hash(newPassword, 10);
 
         currentUser.password = hashedPassword;
+
+        // logout from every device
         currentUser.refreshToken = null;
+
         await currentUser.save();
 
         return res.status(200).json({
-            message: "Password changed successfully."
-        })
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            message: "Something went wrong."
+            message:
+                "Password changed successfully.",
         });
-    }
-}
 
-export const deleteAccount = async (req, res) => {
-    try {
-        const { password } = req.body;
-
-        if(!password?.trim()) {
-            return res.status(400).json({
-                message: "Password is required."
-            })
-        }
-        
-        const currentUser = await User.findByIdAndDelete(req.user.id);
-        if(!currentUser) {
-            return res.status(404).json({
-                message: "User not found."
-            });
-        }
-        return res.status(200).json({
-            message: "Account deleted successfully."
-        })
     } catch (error) {
+
         console.log(error);
+
         return res.status(500).json({
-            message: "Something went wrong."
+            message:
+                "Something went wrong.",
         });
+
     }
 };
 
+export const deleteAccount = async (req, res) => {
+
+    try {
+ 
+        const { password } = req.body;
+
+        const currentUser =
+            await User.findById(req.user.id);
+
+        if (!currentUser) {
+            return res.status(404).json({
+                message: "User not found.",
+            });
+        }
+
+        // Google Login User
+        if (currentUser.googleId) {
+
+            await User.findByIdAndDelete(
+                req.user.id
+            );
+
+            return res.status(200).json({
+                message:
+                    "Account deleted successfully.",
+            });
+
+        }
+
+        // Normal User
+        if (!password?.trim()) {
+            return res.status(400).json({
+                message:
+                    "Password is required.",
+            });
+        }
+
+        const isPasswordCorrect =
+            await bcrypt.compare(
+                password,
+                currentUser.password
+            );
+
+        if (!isPasswordCorrect) {
+            return res.status(400).json({
+                message:
+                    "Password is incorrect.",
+            });
+        }
+
+        await User.findByIdAndDelete(
+            req.user.id
+        );
+
+        return res.status(200).json({
+            message:
+                "Account deleted successfully.",
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        return res.status(500).json({
+            message:
+                "Something went wrong.",
+        });
+
+    }
+
+};

@@ -3,6 +3,7 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useState } from "react";
 
 import { useLogin } from "../../hooks/useAuth";
+import { GoogleLoginButton } from "./GoogleLoginButton";
 
 export const LoginForm = () => {
 
@@ -39,7 +40,6 @@ export const LoginForm = () => {
         mutate({ email, password });
 
     };
-
 
     return (
         <div className="flex flex-1 items-center justify-center bg-white px-16">
@@ -103,7 +103,6 @@ export const LoginForm = () => {
 
                     </div>
 
-
                     <button
                         type="submit"
                         disabled={isPending}
@@ -118,6 +117,19 @@ export const LoginForm = () => {
 
                 </form>
 
+                <div className="my-6 flex items-center">
+
+                    <div className="h-px flex-1 bg-[#E2E4EC]" />
+
+                    <span className="px-4 text-sm text-[#6B7280]">
+                        OR
+                    </span>
+
+                    <div className="h-px flex-1 bg-[#E2E4EC]" />
+
+                </div>
+
+                <GoogleLoginButton />
 
                 <p className="mt-6 text-center text-[#6B7280]">
                     Don't have an account?{" "}

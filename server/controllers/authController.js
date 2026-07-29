@@ -6,7 +6,7 @@ import {
     generateAccessToken,
     generateRefreshToken,
 } from "../utils/generateTokens.js";
-
+import { verifyGoogleToken } from "../utils/verifyGoogleToken.js";
 
 export const signupUser = async (req, res) => {
     try {
@@ -85,6 +85,8 @@ export const loginUser = async (req, res) => {
                 id: currentUser._id,
                 name: currentUser.name,
                 email: currentUser.email,
+
+                isGoogleUser: false,
             },
         });
 
@@ -172,3 +174,59 @@ export const logoutUser = async (req, res) => {
         });
     }
 };
+export const googleLoginUser = async (req, res) => {
+    try {
+        const { credential } = req.body;
+
+        if(!credential){
+            return res.status(400).json({
+                message: "Google credential required."
+            });
+        }
+
+        const googleUser = await verifyGoogleToken(credential);
+
+        const {name, email, picture, sub} = googleUser;
+
+        let currentUser = await User.findOne({ email });
+
+        if (!currentUser) {
+            currentUser = await User.create({
+                name,
+                email,
+                profilePicture: picture,
+                googleId: sub
+            });
+        }
+
+        else if (!currentUser.googleId) {
+            currentUser.googleId = sub;
+            currentUser.profilePicture = picture;
+            await currentUser.save();
+        }
+
+        const accessToken = generateAccessToken(currentUser._id);
+        const refreshToken = generateRefreshToken(currentUser._id);
+
+        currentUser.refreshToken = refreshToken;
+        await currentUser.save();
+
+        return res.status(200).json({
+            message: "Google Login successful.",
+            accessToken,
+            refreshToken,
+            user: {
+                id: currentUser._id,
+                name: currentUser.name,
+                email: currentUser.email,
+                profilePicture: currentUser.profilePicture,
+
+                isGoogleUser: true,
+            },
+        });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Something went wrong." });
+    }
+}

@@ -9,5 +9,9 @@ export const updateProfile = (data) =>
 export const changePassword = (data) =>
     api.put("/user/change-password", data);
 
-export const deleteAccount = () =>
-    api.delete("/user/account");
+export const deleteAccount = (data) =>
+    api.delete("/user/account",
+        {
+            data,
+        }
+    );

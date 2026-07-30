@@ -40,7 +40,6 @@ export const signupUser = async (req, res) => {
     }
 };
 
-
 export const loginUser = async (req, res) => {
     try {
         console.log(req.body);
@@ -96,7 +95,6 @@ export const loginUser = async (req, res) => {
     }
 };
 
-
 export const refreshAccessToken = async (req, res) => {
     try {
         const { refreshToken } = req.body;
@@ -142,7 +140,6 @@ export const refreshAccessToken = async (req, res) => {
         return res.status(500).json({ message: "Something went wrong." });
     }
 };
-
 
 export const logoutUser = async (req, res) => {
     try {

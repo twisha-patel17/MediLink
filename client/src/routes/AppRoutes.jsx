@@ -7,10 +7,6 @@ import { ProfilePage } from "../pages/ProfilePage";
 import { HospitalsPage } from "../pages/HospitalsPage";
 import { BloodBanksPage } from "../pages/BloodBanksPage";
 import { PharmaciesPage } from "../pages/PharmaciesPage";
-import { SavedHospitalsPage } from "../pages/SavedHospitalsPage";
-import { SavedPharmaciesPage } from "../pages/SavedPharmaciesPage";
-import { SavedBloodBanksPage } from "../pages/SavedBloodBanksPage";
-import { ResourceDetailsPage } from "../pages/ResourceDetailsPage";
 import { NotFoundPage } from "../pages/NotFoundPage";
 
 export const AppRoutes = () => {
@@ -25,27 +21,6 @@ export const AppRoutes = () => {
             <Route path="/hospitals" element={<HospitalsPage />} />
             <Route path="/bloodbanks" element={<BloodBanksPage />} />
             <Route path="/pharmacies" element={<PharmaciesPage />} />
-
-            <Route
-                path="/savedplaces/hospitals"
-                element={<SavedHospitalsPage />}
-            />
-
-            <Route
-                path="/savedplaces/pharmacies"
-                element={<SavedPharmaciesPage />}
-            />
-
-            <Route
-                path="/savedplaces/bloodbanks"
-                element={<SavedBloodBanksPage />}
-            />
-
-            <Route
-                path="/resource/:id"
-                element={<ResourceDetailsPage />}
-            />
-
             <Route
                 path="*"
                 element={<NotFoundPage />}

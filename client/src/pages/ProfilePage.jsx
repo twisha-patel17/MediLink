@@ -2,7 +2,6 @@ import DashboardLayout from "../layouts/DashboardLayout";
 
 import { ProfileCard } from "../components/profile/ProfileCard";
 import { SettingsCard } from "../components/profile/SettingsCard";
-import { SavedPlacesCard } from "../components/profile/SavedPlacesCard";
 import { DeleteAccountCard } from "../components/profile/DeleteAccountCard";
 
 export const ProfilePage = () => {
@@ -20,8 +19,7 @@ export const ProfilePage = () => {
 
                 <SettingsCard />
 
-                <SavedPlacesCard />
-
+    
                 <DeleteAccountCard
                     isGoogleUser={user?.isGoogleUser}
                 />

@@ -8,7 +8,7 @@ export const SearchBar = ({
     setSearchQuery,
 }) => {
     return (
-        <div className="rounded-2xl border border-[#E2E4EC] bg-white p-6 shadow-sm">
+        <div className="flex-1 rounded-2xl border border-[#E2E4EC] bg-white p-6 shadow-sm">
 
             <h2 className="text-2xl font-semibold text-[#11131A]">
                 {title}

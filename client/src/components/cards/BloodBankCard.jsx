@@ -1,39 +1,145 @@
-import { useNavigate } from "react-router-dom";
+import { FiStar } from "react-icons/fi";
 
-export const BloodBankCard = ({id}) => {
-    const navigate = useNavigate();
-  return (
-    <div className="rounded-2xl border border-[#E2E4EC] bg-white p-6 shadow-sm">
+export const BloodBankCard = ({ place }) => {
 
-    <h2 className="text-2xl font-semibold text-[#11131A]">
-        Red Cross Blood Bank
-    </h2>
+    const distance = place.distanceKm;
 
-    <p className="mt-2 font-medium text-[#1D4ED8]">
-        ★ 4.9
-    </p>
+    const hasRating = place.rating != null;
 
-    <div className="mt-3 flex items-center justify-between">
+    return (
+        <div
+            className="
+            rounded-2xl
+            border
+            border-[#E2E4EC]
+            bg-white
+            p-6
+            shadow-sm
+            "
+        >
+            <h2
+                className="
+                text-2xl
+                font-semibold
+                text-[#11131A]
+                "
+            >
+                {place.displayName?.text}
+            </h2>
 
-        <p className="font-medium text-green-600">
-            Open Now
-        </p>
+            <div className="mt-3 flex flex-wrap gap-3">
+                <span
+                    className="
+                    flex
+                    items-center
+                    gap-1
+                    rounded-lg
+                    bg-yellow-50
+                    px-3
+                    py-1
+                    text-sm
+                    font-semibold
+                    text-yellow-600
+                    "
+                >
+                    <FiStar />
+                    {hasRating ? place.rating : "No Rating"}
+                </span>
 
-        <p className="text-[#6B7280]">
-            3 KM Away
-        </p>
+                {distance != null && (
+                    <span
+                        className="
+                        rounded-lg
+                        bg-blue-50
+                        px-3
+                        py-1
+                        text-sm
+                        font-medium
+                        text-blue-600
+                        "
+                    >
+                        {distance} KM 
+                    </span>
+                )}
+            </div>
 
-    </div>
+            <p
+                className="
+                mt-4
+                font-medium
+                text-red-600
+                "
+            >
+                Blood Donation & Collection Centre
+            </p>
 
-    <p className="mt-2 text-[#6B7280]">
-        Ahmedabad, Gujarat
-    </p>
+            <p
+                className="
+                mt-2
+                text-[#6B7280]
+                "
+            >
+                Nearby Blood Bank
+            </p>
 
-    <button onClick={() => navigate(`/resource/${id}`)}
-     className="mt-6 w-full rounded-xl bg-[#1D4ED8] py-3 font-medium text-white transition hover:bg-[#15359E]">
-        View Details
-    </button>
+            <p
+                className="
+                mt-1
+                text-[#6B7280]
+                "
+            >
+                {place.formattedAddress}
+            </p>
 
-</div>
-  )
-}
+            <div
+                className="
+                mt-6
+                flex
+                gap-3
+                "
+            >
+                <button
+                    onClick={() =>
+                        window.open(place.googleMapsUri, "_blank")
+                    }
+                    className="
+                    flex-1
+                    rounded-xl
+                    bg-[#1D4ED8]
+                    py-3
+                    font-medium
+                    text-white
+                    transition
+                    hover:bg-[#15359E]
+                    "
+                >
+                    Open in Maps
+                </button>
+
+                <button
+                    onClick={() =>
+                        window.open(
+                            `https://www.google.com/search?q=${encodeURIComponent(
+                                place.displayName?.text || ""
+                            )}`,
+                            "_blank"
+                        )
+                    }
+                    className="
+                    flex-1
+                    rounded-xl
+                    border
+                    border-[#E2E4EC]
+                    py-3
+                    font-medium
+                    transition
+                    hover:border-[#1D4ED8]
+                    hover:text-[#1D4ED8]
+                    "
+                >
+                    Search Online
+                </button>
+            </div>
+        </div>
+    );
+};

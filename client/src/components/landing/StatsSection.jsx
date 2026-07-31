@@ -14,7 +14,6 @@ export const StatsSection = () => {
                     </p>
                 </div>
 
-
                 <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 
                     <div className="rounded-3xl bg-white p-8 text-center shadow-md">
@@ -49,11 +48,11 @@ export const StatsSection = () => {
 
                     <div className="rounded-3xl bg-white p-8 text-center shadow-md">
                         <h3 className="font-heading text-4xl font-bold text-[#1D4ED8]">
-                            Save
+                            Smart
                         </h3>
 
                         <p className="mt-3 text-lg font-semibold text-[#11131A]">
-                            Your Favourite Places
+                            Distance Filter
                         </p>
                     </div>
 

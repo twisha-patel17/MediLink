@@ -19,7 +19,6 @@ const DISTANCE_MAP = {
     "50 KM": 50000,
 };
 
-// Parses "4.5+ ⭐" -> 4.5
 const parseRatingThreshold = (value) => {
     const match = value?.match(/[\d.]+/);
     return match ? parseFloat(match[0]) : null;
@@ -36,6 +35,7 @@ export const HospitalsPage = () => {
 
     const [currentLocation, setCurrentLocation] = useState(null);
     const [locationError, setLocationError] = useState(null);
+    const [showMap, setShowMap] = useState(false);
 
     const radius = DISTANCE_MAP[selectedFilters.distance] || 20000;
 
@@ -91,11 +91,6 @@ export const HospitalsPage = () => {
             return false;
         }
 
-        // "Available Now" and "Open 24/7" both rely on the same
-        // openNow field from the Places API - it's the only live
-        // availability signal we get back.
-        // "Emergency" has no equivalent field from the API, so it
-        // currently can't be filtered on and is treated as a no-op.
         if (
             (selectedFilters.availability === "Available Now" ||
                 selectedFilters.availability === "Open 24/7") &&
@@ -122,6 +117,28 @@ export const HospitalsPage = () => {
                     selectedFilters={selectedFilters}
                     setSelectedFilters={setSelectedFilters}
                 />
+
+                <button
+                    type="button"
+                    onClick={() => setShowMap((prev) => !prev)}
+                    className="
+                    rounded-xl
+                    border
+                    border-[#E2E4EC]
+                    bg-white
+                    px-5
+                    py-3
+                    text-sm
+                    font-semibold
+                    text-[#6B7280]
+                    shadow-sm
+                    transition
+                    hover:border-[#1D4ED8]
+                    hover:text-[#1D4ED8]
+                    "
+                >
+                    {showMap ? "Hide Map" : "Show Map"}
+                </button>
             </div>
 
             {locationError && (
@@ -143,21 +160,30 @@ export const HospitalsPage = () => {
             )}
 
             <div
-                className="
+                className={`
                 mt-8
                 grid
                 grid-cols-1
                 gap-8
-                lg:grid-cols-[520px_1fr]
-                "
+
+                ${
+                    showMap
+                        ? "lg:grid-cols-[520px_1fr]"
+                        : "sm:grid-cols-2 xl:grid-cols-3"
+                }
+                `}
             >
                 <div
-                    className="
+                    className={`
                     space-y-5
-                    lg:h-[calc(100vh-140px)]
-                    lg:overflow-y-auto
                     pr-3
-                    "
+
+                    ${
+                        showMap
+                            ? "lg:h-[calc(100vh-140px)] lg:overflow-y-auto"
+                            : "contents"
+                    }
+                    `}
                 >
                     {loading ? (
                         <h1>Loading...</h1>
@@ -176,18 +202,20 @@ export const HospitalsPage = () => {
                     )}
                 </div>
 
-                <div
-                    className="
-                    lg:sticky
-                    lg:top-5
-                    lg:h-[88vh]
-                    "
-                >
-                    <Map
-                        currentLocation={currentLocation}
-                        places={filteredHospitals}
-                    />
-                </div>
+                {showMap && (
+                    <div
+                        className="
+                        lg:sticky
+                        lg:top-5
+                        lg:h-[88vh]
+                        "
+                    >
+                        <Map
+                            currentLocation={currentLocation}
+                            places={filteredHospitals}
+                        />
+                    </div>
+                )}
             </div>
         </DashboardLayout>
     );

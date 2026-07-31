@@ -20,11 +20,11 @@ export const FeaturesSection = () => {
 
                     <div className="rounded-3xl bg-white p-8 shadow-md">
                         <h3 className="text-2xl font-semibold text-[#11131A]">
-                            Save Places
+                            Smart Distance Filters
                         </h3>
 
                         <p className="mt-4 leading-7 text-[#6B7280]">
-                            Save your favourite healthcare resources for quicker access whenever required.
+Find healthcare resources within your preferred distance for faster and more relevant results.
                         </p>
                     </div>
 

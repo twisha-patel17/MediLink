@@ -74,11 +74,11 @@ export const HowItWorks = () => {
                         </div>
 
                         <h3 className="mt-6 text-2xl font-semibold text-[#11131A]">
-                            Save
+                            Filter
                         </h3>
 
                         <p className="mt-4 leading-7 text-[#6B7280]">
-                            Save your favourite places for quicker access later.
+                            Filter healthcare resources by distance to quickly find the most relevant results.
                         </p>
 
                     </div>

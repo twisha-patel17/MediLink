@@ -18,7 +18,6 @@ const DISTANCE_MAP = {
     "50 KM": 50000,
 };
 
-// Parses "4.5+ ⭐" -> 4.5
 const parseRatingThreshold = (value) => {
     const match = value?.match(/[\d.]+/);
     return match ? parseFloat(match[0]) : null;
@@ -27,6 +26,7 @@ const parseRatingThreshold = (value) => {
 export const PharmaciesPage = () => {
     const [currentLocation, setCurrentLocation] = useState(null);
     const [locationError, setLocationError] = useState(null);
+    const [showMap, setShowMap] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -89,9 +89,7 @@ export const PharmaciesPage = () => {
             return false;
         }
 
-        // "Available Now" and "Open 24/7" both rely on the same
-        // openNow field from the Places API - it's the only live
-        // availability signal we get back.
+
         if (
             (selectedFilters.availability === "Available Now" ||
                 selectedFilters.availability === "Open 24/7") &&
@@ -118,6 +116,28 @@ export const PharmaciesPage = () => {
                     selectedFilters={selectedFilters}
                     setSelectedFilters={setSelectedFilters}
                 />
+
+                <button
+                    type="button"
+                    onClick={() => setShowMap((prev) => !prev)}
+                    className="
+                    rounded-xl
+                    border
+                    border-[#E2E4EC]
+                    bg-white
+                    px-5
+                    py-3
+                    text-sm
+                    font-semibold
+                    text-[#6B7280]
+                    shadow-sm
+                    transition
+                    hover:border-[#1D4ED8]
+                    hover:text-[#1D4ED8]
+                    "
+                >
+                    {showMap ? "Hide Map" : "Show Map"}
+                </button>
             </div>
 
             {locationError && (
@@ -139,21 +159,30 @@ export const PharmaciesPage = () => {
             )}
 
             <div
-                className="
+                className={`
                 mt-8
                 grid
                 grid-cols-1
                 gap-6
-                lg:grid-cols-[420px_1fr]
-                "
+
+                ${
+                    showMap
+                        ? "lg:grid-cols-[420px_1fr]"
+                        : "sm:grid-cols-2 xl:grid-cols-3"
+                }
+                `}
             >
                 <div
-                    className="
+                    className={`
                     space-y-5
-                    lg:h-[calc(100vh-220px)]
-                    lg:overflow-y-auto
                     pr-2
-                    "
+
+                    ${
+                        showMap
+                            ? "lg:h-[calc(100vh-220px)] lg:overflow-y-auto"
+                            : "contents"
+                    }
+                    `}
                 >
                     {loading ? (
                         <h1>Loading...</h1>
@@ -172,17 +201,19 @@ export const PharmaciesPage = () => {
                     )}
                 </div>
 
-                <div
-                    className="
-                    lg:sticky
-                    lg:top-5
-                    "
-                >
-                    <Map
-                        currentLocation={currentLocation}
-                        places={filteredPharmacies}
-                    />
-                </div>
+                {showMap && (
+                    <div
+                        className="
+                        lg:sticky
+                        lg:top-5
+                        "
+                    >
+                        <Map
+                            currentLocation={currentLocation}
+                            places={filteredPharmacies}
+                        />
+                    </div>
+                )}
             </div>
         </DashboardLayout>
     );

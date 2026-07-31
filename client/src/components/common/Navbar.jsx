@@ -1,7 +1,14 @@
 import { NavLink } from "react-router-dom";
 import logo from "../../assets/medilink-icon.png";
 
+import { useCurrentUser } from "../../hooks/useUser";
+
 export const Navbar = () => {
+    const { data: user } = useCurrentUser();
+
+    const firstLetter =
+        user?.name?.charAt(0).toUpperCase() || "?";
+
     return (
         <nav className="border-b border-[#E2E4EC] bg-white shadow-sm">
 
@@ -101,7 +108,7 @@ export const Navbar = () => {
                     hover:bg-[#D7E3FF]
                     "
                 >
-                    T
+                    {firstLetter}
                 </NavLink>
 
             </div>

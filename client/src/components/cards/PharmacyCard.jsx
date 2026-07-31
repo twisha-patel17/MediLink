@@ -1,8 +1,9 @@
 import { FiStar } from "react-icons/fi";
 
 export const PharmacyCard = ({ place }) => {
-
     const distance = place.distanceKm;
+    const duration = place.durationMin;
+    const isDriving = place.isDrivingDistance;
 
     const hasRating = place.rating != null;
 
@@ -58,7 +59,10 @@ export const PharmacyCard = ({ place }) => {
                         text-blue-600
                         "
                     >
-                        {distance} KM 
+                        {distance} KM
+                        {isDriving && duration != null
+                            ? ` · ${duration} min drive`
+                            : " (approx.)"}
                     </span>
                 )}
             </div>

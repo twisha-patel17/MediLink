@@ -9,10 +9,6 @@ import { Map } from "../components/common/Map";
 
 import { useBloodBanks } from "../hooks/useBloodBanks";
 
-// getBloodBanks caps radius at 50000 internally (see mapsService.js),
-// so anything above 50 KM would silently be clamped anyway. Only
-// offering options up to that ceiling here avoids a filter that
-// looks selectable but does nothing.
 const DISTANCE_MAP = {
     "1 KM": 1000,
     "3 KM": 3000,
@@ -22,7 +18,7 @@ const DISTANCE_MAP = {
     "50 KM": 50000,
 };
 
-// Parses "4.5+ ⭐" -> 4.5
+
 const parseRatingThreshold = (value) => {
     const match = value?.match(/[\d.]+/);
     return match ? parseFloat(match[0]) : null;
@@ -39,6 +35,7 @@ export const BloodBanksPage = () => {
 
     const [currentLocation, setCurrentLocation] = useState(null);
     const [locationError, setLocationError] = useState(null);
+    const [showMap, setShowMap] = useState(false);
 
     useEffect(() => {
         if (!navigator.geolocation) {
@@ -120,6 +117,28 @@ export const BloodBanksPage = () => {
                     selectedFilters={selectedFilters}
                     setSelectedFilters={setSelectedFilters}
                 />
+
+                <button
+                    type="button"
+                    onClick={() => setShowMap((prev) => !prev)}
+                    className="
+                    rounded-xl
+                    border
+                    border-[#E2E4EC]
+                    bg-white
+                    px-5
+                    py-3
+                    text-sm
+                    font-semibold
+                    text-[#6B7280]
+                    shadow-sm
+                    transition
+                    hover:border-[#1D4ED8]
+                    hover:text-[#1D4ED8]
+                    "
+                >
+                    {showMap ? "Hide Map" : "Show Map"}
+                </button>
             </div>
 
             {locationError && (
@@ -141,21 +160,30 @@ export const BloodBanksPage = () => {
             )}
 
             <div
-                className="
+                className={`
                 mt-8
                 grid
                 grid-cols-1
                 gap-6
-                lg:grid-cols-[420px_1fr]
-                "
+
+                ${
+                    showMap
+                        ? "lg:grid-cols-[420px_1fr]"
+                        : "sm:grid-cols-2 xl:grid-cols-3"
+                }
+                `}
             >
                 <div
-                    className="
+                    className={`
                     space-y-5
-                    lg:h-[calc(100vh-220px)]
-                    lg:overflow-y-auto
                     pr-2
-                    "
+
+                    ${
+                        showMap
+                            ? "lg:h-[calc(100vh-220px)] lg:overflow-y-auto"
+                            : "contents"
+                    }
+                    `}
                 >
                     {loading ? (
                         <h1>Loading...</h1>
@@ -174,17 +202,19 @@ export const BloodBanksPage = () => {
                     )}
                 </div>
 
-                <div
-                    className="
-                    lg:sticky
-                    lg:top-5
-                    "
-                >
-                    <Map
-                        currentLocation={currentLocation}
-                        places={filteredBloodBanks}
-                    />
-                </div>
+                {showMap && (
+                    <div
+                        className="
+                        lg:sticky
+                        lg:top-5
+                        "
+                    >
+                        <Map
+                            currentLocation={currentLocation}
+                            places={filteredBloodBanks}
+                        />
+                    </div>
+                )}
             </div>
         </DashboardLayout>
     );

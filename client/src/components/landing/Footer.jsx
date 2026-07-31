@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export const Footer = () => {
     return (
         <footer className="bg-[#0E1420] py-20">
@@ -18,61 +19,54 @@ export const Footer = () => {
                         </p>
 
                     </div>
-                    <div>
-
-                        <h3 className="text-xl font-semibold text-white">
-                            Quick Links
-                        </h3>
-
-                        <ul className="mt-5 space-y-4 text-gray-300">
-
-                            <li className="hover:text-white cursor-pointer">
-                                Home
-                            </li>
-
-                            <li className="hover:text-white cursor-pointer">
-                                Services
-                            </li>
-
-                            <li className="hover:text-white cursor-pointer">
-                                Features
-                            </li>
-
-                            <li className="hover:text-white cursor-pointer">
-                                Login
-                            </li>
-
-                        </ul>
-
-                    </div>
 
                     <div>
 
-                        <h3 className="text-xl font-semibold text-white">
-                            Resources
-                        </h3>
+    <h3 className="text-xl font-semibold text-white">
+        Quick Links
+    </h3>
 
-                        <ul className="mt-5 space-y-4 text-gray-300">
+    <ul className="mt-5 space-y-4 text-gray-300">
 
-                            <li className="hover:text-white cursor-pointer">
-                                Hospitals
-                            </li>
+        <li>
+            <Link
+                to="/"
+                className="hover:text-white"
+            >
+                Home
+            </Link>
+        </li>
 
-                            <li className="hover:text-white cursor-pointer">
-                                Blood Banks
-                            </li>
+        <li>
+            <a
+                href="#services"
+                className="hover:text-white"
+            >
+                Services
+            </a>
+        </li>
 
-                            <li className="hover:text-white cursor-pointer">
-                                Pharmacies
-                            </li>
+        <li>
+            <a
+                href="#features"
+                className="hover:text-white"
+            >
+                Features
+            </a>
+        </li>
 
-                            <li className="hover:text-white cursor-pointer">
-                                Saved Places
-                            </li>
+        <li>
+            <Link
+                to="/login"
+                className="hover:text-white"
+            >
+                Login
+            </Link>
+        </li>
 
-                        </ul>
+    </ul>
 
-                    </div>
+</div>
 
                 </div>
                 <div className="my-12 h-px bg-gray-700"></div>
